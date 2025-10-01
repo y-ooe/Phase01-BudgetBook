@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('type', ['income', 'expense']);
             $table->integer('amount')->default(0);
             $table->string('note');
+            $table->date('transaction_date');
             $table->timestamps();
         });
     }
