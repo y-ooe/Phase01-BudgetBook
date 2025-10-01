@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->enum('type', ['income', 'expense']);
             $table->integer('amount')->default(0);
-            $table->string('note');
+            $table->string('note')->nullable();
             $table->date('transaction_date');
             $table->timestamps();
         });

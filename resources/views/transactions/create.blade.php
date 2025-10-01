@@ -6,10 +6,10 @@
             @csrf
 
             <div>
-                <label for="date" class="block font-medium">日付</label>
-                <input type="date" id="date" name="date"
+                <label for="transaction_date" class="block font-medium">日付</label>
+                <input type="date" id="transaction_date" name="transaction_date"
                     class="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    value="{{ old('date', date('Y-m-d')) }}" required>
+                    value="{{ old('transaction_date', date('Y-m-d')) }}" required>
             </div>
 
             <div>
@@ -43,5 +43,11 @@
                 </button>
             </div>
         </form>
+        <!-- 成功したらメッセージ表示 -->
+        @if (session('success'))
+            <div class="mt-4 p-4 bg-green-100 text-green-800 rounded-md">
+                {{ session('success') }}
+            </div>
+        @endif
     </div>
 </x-app-layout>

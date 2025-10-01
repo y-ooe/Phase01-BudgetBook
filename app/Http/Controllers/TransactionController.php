@@ -20,7 +20,8 @@ class TransactionController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
+    {   
+        // カテゴリ一覧を取得して登録画面に渡す
         $categories = Category::all();
         return view('transactions.create', compact('categories'));
     }
@@ -29,8 +30,29 @@ class TransactionController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        // バリデーション
+        $validated = $request->validate([
+            'category_id' => ['required', 'exists:categories,id'],
+            'amount' => ['required', 'integer', 'min:1'], // 1以上の整数
+            'transaction_date' => ['required', 'date'],
+            'note' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $category = Category::findOrFail($validated['category_id']);
+        
+        // 支出の場合は金額をマイナスに変換
+        if ($category->type === 'expense') {
+            $validated['amount'] = -abs($validated['amount']);
+        }
+        
+        $validated['type'] = $category->type;
+        
+        // 保存
+        $request->user()->transactions()->create($validated);
+
+        return redirect()->route('transactions.create')->with('success', '家計簿を登録しました');
+
     }
 
     /**
