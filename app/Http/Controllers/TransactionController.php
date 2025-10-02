@@ -16,7 +16,7 @@ class TransactionController extends Controller
         // 家計簿の履歴を表示する
         $transactions = Transaction::where('user_id', auth()->id())
             ->with('user')
-            ->latest()
+            ->orderBy('transaction_date', 'desc')
             ->get();
         return view('transactions.index', compact('transactions'));
     }
