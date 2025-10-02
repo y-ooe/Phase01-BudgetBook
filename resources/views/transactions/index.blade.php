@@ -10,6 +10,7 @@
                     <th class="border-b p-2">種類</th>
                     <th class="border-b p-2">金額</th>
                     <th class="border-b p-2">メモ</th>
+                    <th class="border-b p-2 text-center">操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,10 +27,25 @@
                         </td>
                         <td class="border-b p-2">{{ number_format($transaction->amount) }} 円</td>
                         <td class="border-b p-2">{{ $transaction->note }}</td>
+                        <td class="border-b p-2 text-center flex justify-center space-x-2">
+                            <a href="{{ route('transactions.edit', $transaction) }}" 
+                               class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                                編集
+                            </a>
+                            <form action="{{ route('transactions.destroy', $transaction) }}" method="POST" 
+                                  onsubmit="return confirm('削除してもよろしいですか？')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" 
+                                        class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm">
+                                    削除
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center text-gray-500 py-4">記録がありません。</td>
+                        <td colspan="6" class="text-center text-gray-500 py-4">記録がありません。</td>
                     </tr>
                 @endforelse
             </tbody>

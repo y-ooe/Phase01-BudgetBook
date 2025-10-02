@@ -14,7 +14,10 @@ class TransactionController extends Controller
     public function index()
     {
         // 家計簿の履歴を表示する
-        $transactions = Transaction::with('user')->latest()->get();
+        $transactions = Transaction::where('user_id', auth()->id())
+            ->with('user')
+            ->latest()
+            ->get();
         return view('transactions.index', compact('transactions'));
     }
 
@@ -71,6 +74,9 @@ class TransactionController extends Controller
     public function edit(Transaction $transaction)
     {
         //
+        $categories = Category::all();
+
+        return view('transactions.edit', compact('transaction', 'categories'));
     }
 
     /**
@@ -79,6 +85,25 @@ class TransactionController extends Controller
     public function update(Request $request, Transaction $transaction)
     {
         //
+    $validated = $request->validate([
+        'category_id' => ['required', 'exists:categories,id'],
+        'amount' => ['required', 'integer', 'min:1'],
+        'transaction_date' => ['required', 'date'],
+        'note' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $category = Category::findOrFail($validated['category_id']);
+        
+        // 支出の場合は金額をマイナスに変換
+        if ($category->type === 'expense') {
+            $validated['amount'] = -abs($validated['amount']);
+        }
+        $validated['type'] = $category->type;
+
+        $transaction->update($validated);
+
+        return redirect()->route('transactions.index');
+
     }
 
     /**
@@ -86,6 +111,9 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
-        //
+        // 家計簿を削除
+        $transaction->delete();
+
+        return redirect()->route('transactions.index');
     }
 }
