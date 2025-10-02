@@ -13,7 +13,9 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        // 家計簿の履歴を表示する
+        $transactions = Transaction::with('user')->latest()->get();
+        return view('transactions.index', compact('transactions'));
     }
 
     /**
