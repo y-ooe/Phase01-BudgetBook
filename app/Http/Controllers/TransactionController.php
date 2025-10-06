@@ -18,7 +18,17 @@ class TransactionController extends Controller
             ->with('user')
             ->orderBy('transaction_date', 'desc')
             ->get();
-        return view('transactions.index', compact('transactions'));
+
+        // 収入合計
+        $incomeTotal = $transactions->where('type', 'income')->sum('amount');
+
+        // 支出合計（マイナスで登録しているなら abs()）
+        $expenseTotal = abs($transactions->where('type', 'expense')->sum('amount'));
+
+        // 差引残高
+        $balance = $incomeTotal - $expenseTotal;
+
+ return view('transactions.index', compact('transactions', 'incomeTotal', 'expenseTotal', 'balance'));
     }
 
     /**

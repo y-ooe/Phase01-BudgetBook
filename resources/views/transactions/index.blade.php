@@ -2,6 +2,29 @@
     <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 mt-8">
         <h1 class="text-2xl font-bold mb-6">家計簿の履歴</h1>
 
+        <!-- 集計結果 -->
+        <div class="grid grid-cols-3 gap-4 text-center mb-6">
+            <div class="p-4 bg-green-100 rounded-lg">
+                <div class="text-lg font-semibold text-green-700">収入合計</div>
+                <div class="text-2xl font-bold text-green-800">
+                    {{ number_format($incomeTotal) }} 円
+                </div>
+            </div>
+            <div class="p-4 bg-red-100 rounded-lg">
+                <div class="text-lg font-semibold text-red-700">支出合計</div>
+                <div class="text-2xl font-bold text-red-800">
+                    {{ number_format($expenseTotal) }} 円
+                </div>
+            </div>
+            <div class="p-4 bg-blue-100 rounded-lg">
+                <div class="text-lg font-semibold text-blue-700">差引残高</div>
+                <div class="text-2xl font-bold text-blue-800">
+                    {{ number_format($balance) }} 円
+                </div>
+            </div>
+        </div>
+
+        <!-- 履歴テーブル -->
         <table class="min-w-full border-collapse">
             <thead>
                 <tr class="bg-gray-100 text-left">
@@ -50,6 +73,5 @@
                 @endforelse
             </tbody>
         </table>
-
     </div>
 </x-app-layout>
